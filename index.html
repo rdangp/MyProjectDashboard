@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTRA — Dashboard Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D2137;--blue:#1565C0;--blue-lt:#1976D2;--blue-acc:#2196F3;--cyan:#00B0FF;
+  --danger:#E53935;--success:#2E7D32;--warning:#F57C00;
+  --bg:#F0F5FB;--surface:#FFFFFF;--topbar-bg:#FFFFFF;
+  --border:#D0DCF0;--border-lt:#EAF0FA;
+  --text-1:#0D2137;--text-2:#3B526E;--text-3:#6B8099;
+  --input-bg:#FAFCFF;--hover-bg:rgba(21,101,192,.05);
+  --sb-bg:#0D2137;--sb-divider:rgba(255,255,255,.07);--sb-hover:rgba(255,255,255,.07);--sb-active:rgba(33,150,243,.18);--sb-text:rgba(255,255,255,.55);
+  --sidebar-w:240px;--topbar-h:60px;
+}
+[data-theme="dark"]{
+  --bg:#0B1120;--surface:#111C30;--topbar-bg:#0D1628;
+  --border:#1B3050;--border-lt:#162640;
+  --text-1:#D6E8F8;--text-2:#8AAFC8;--text-3:#4A6A85;
+  --input-bg:#0A1422;--hover-bg:rgba(33,150,243,.08);
+  --sb-bg:#060D1A;--sb-divider:rgba(255,255,255,.05);--sb-hover:rgba(255,255,255,.05);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-1);min-height:100vh;overflow:hidden;transition:background .3s,color .3s}
+
+/* LOGIN */
+#login-screen{display:flex;height:100vh;width:100vw;position:fixed;inset:0;z-index:100;transition:opacity .4s,transform .4s}
+#login-screen.hidden{opacity:0;pointer-events:none;transform:scale(1.02)}
+.login-left{width:42%;background:var(--sb-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 2.5rem;position:relative;overflow:hidden}
+.login-left::before{content:'';position:absolute;width:320px;height:320px;border-radius:50%;border:40px solid rgba(33,150,243,.08);bottom:-80px;right:-80px}
+.login-left::after{content:'';position:absolute;width:180px;height:180px;border-radius:50%;border:30px solid rgba(33,150,243,.06);top:-40px;left:-40px}
+.brand-mark{display:flex;align-items:center;gap:12px;margin-bottom:2.5rem}
+.brand-icon{width:48px;height:48px;background:var(--blue);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:26px;height:26px;fill:white}
+.brand-name{font-size:22px;font-weight:700;color:white;letter-spacing:.5px}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.login-tagline{font-size:28px;font-weight:700;color:white;line-height:1.35;text-align:center;margin-bottom:1.25rem}
+.login-desc{font-size:14px;color:rgba(255,255,255,.5);text-align:center;line-height:1.7;max-width:280px}
+.login-badges{display:flex;gap:8px;margin-top:2.5rem;flex-wrap:wrap;justify-content:center}
+.badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(33,150,243,.15);color:rgba(33,150,243,.9);border:1px solid rgba(33,150,243,.25)}
+.login-right{flex:1;background:var(--surface);display:flex;align-items:center;justify-content:center;padding:2rem;transition:background .3s}
+.login-box{width:100%;max-width:380px}
+.login-box h2{font-size:22px;font-weight:700;color:var(--text-1);margin-bottom:6px}
+.login-box>p{font-size:14px;color:var(--text-3);margin-bottom:2rem}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text-2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px}
+.f-input{width:100%;height:46px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:14px;font-family:inherit;color:var(--text-1);background:var(--input-bg);outline:none;transition:border-color .2s,box-shadow .2s,background .3s}
+.f-input:focus{border-color:var(--blue-acc);box-shadow:0 0 0 3px rgba(33,150,243,.12);background:var(--surface)}
+.form-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.check-wrap{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer}
+.check-wrap input{accent-color:var(--blue)}
+.forgot{font-size:13px;color:var(--blue-acc);text-decoration:none}
+.btn-primary{display:flex;align-items:center;justify-content:center;width:100%;height:46px;background:var(--blue);color:white;font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:background .2s,transform .15s}
+.btn-primary:hover{background:var(--blue-lt)}
+.btn-primary:active{transform:scale(.98)}
+.login-error{font-size:13px;color:var(--danger);margin-bottom:1rem;display:none;padding:10px 14px;background:rgba(229,57,53,.08);border-radius:8px;border:1px solid rgba(229,57,53,.25)}
+.login-footer{text-align:center;margin-top:1.5rem;font-size:12px;color:var(--text-3)}
+
+/* APP SHELL */
+#app-screen{display:flex;height:100vh;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .4s ease .1s}
+#app-screen.visible{opacity:1;pointer-events:all}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--sb-bg);display:flex;flex-direction:column;flex-shrink:0;position:relative;z-index:10;transition:background .3s}
+.sidebar-logo{height:var(--topbar-h);display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid var(--sb-divider)}
+.sidebar-logo .logo-icon{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-logo .logo-icon svg{width:18px;height:18px;fill:white}
+.sidebar-logo .logo-text{font-size:14px;font-weight:700;color:white;letter-spacing:.3px}
+.sidebar-logo .logo-sub{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase}
+.sb-section{padding:20px 12px 8px;font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.25);text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 16px;margin:2px 8px;border-radius:10px;cursor:pointer;color:var(--sb-text);font-size:13.5px;font-weight:500;transition:all .18s;position:relative;border:none;background:none;width:calc(100% - 16px);font-family:inherit;text-align:left}
+.nav-item:hover{background:var(--sb-hover);color:rgba(255,255,255,.85)}
+.nav-item.active{background:var(--sb-active);color:#82CFFF}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--cyan);border-radius:0 3px 3px 0}
+.nav-item .ni{width:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-item .ni svg{width:18px;height:18px}
+.nav-badge{margin-left:auto;background:var(--blue);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.sb-divider{margin:12px 16px;border:none;border-top:1px solid var(--sb-divider)}
+.sb-footer{margin-top:auto;padding:16px 12px;border-top:1px solid var(--sb-divider)}
+.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.05)}
+.user-av{width:34px;height:34px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.user-name-s{font-size:13px;font-weight:500;color:rgba(255,255,255,.8)}
+.user-role-s{font-size:11px;color:rgba(255,255,255,.35)}
+.logout-btn{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;padding:4px;border-radius:6px;transition:color .2s;display:flex;align-items:center}
+.logout-btn:hover{color:rgba(255,255,255,.7)}
+.logout-btn svg{width:16px;height:16px}
+
+/* TOPBAR */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:var(--topbar-h);background:var(--topbar-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;transition:background .3s,border-color .3s}
+.topbar-title{font-size:16px;font-weight:700;color:var(--text-1)}
+.topbar-sub{font-size:12px;color:var(--text-3)}
+.topbar-pill{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(21,101,192,.1);color:var(--blue-acc);font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid rgba(33,150,243,.2)}
+.topbar-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.topbar-date{font-size:12px;color:var(--text-3);padding-left:16px;border-left:1px solid var(--border)}
+
+/* PANELS */
+.content-pane{flex:1;position:relative;overflow:hidden}
+.dash-panel{position:absolute;inset:0;display:none;flex-direction:column;opacity:0;transition:opacity .25s}
+.dash-panel.active{display:flex;opacity:1}
+.dash-panel iframe{flex:1;border:none;display:block;width:100%;height:100%}
+.placeholder-panel{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:var(--bg)}
+.ph-icon{width:72px;height:72px;border-radius:20px;background:var(--surface);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center}
+.ph-icon svg{width:36px;height:36px;stroke:var(--border);fill:none}
+.ph-title{font-size:16px;font-weight:600;color:var(--text-1)}
+.ph-sub{font-size:13px;color:var(--text-3);text-align:center;max-width:260px;line-height:1.6}
+.ph-badge{padding:6px 14px;border-radius:20px;background:rgba(245,124,0,.1);color:var(--warning);font-size:12px;font-weight:600;border:1px solid rgba(245,124,0,.3)}
+.ph-link{font-size:13px;color:var(--blue-acc);cursor:pointer;text-decoration:underline}
+
+/* ── SETTINGS ── */
+.settings-wrap{flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg);transition:background .3s}
+.settings-header{margin-bottom:24px}
+.settings-header h2{font-size:20px;font-weight:700;color:var(--text-1);margin-bottom:4px}
+.settings-header p{font-size:13px;color:var(--text-3)}
+.stabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:24px;width:fit-content;transition:background .3s,border-color .3s}
+.stab{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text-2);font-family:inherit;transition:all .18s}
+.stab.active{background:var(--blue);color:white}
+.stab:hover:not(.active){background:var(--hover-bg);color:var(--text-1)}
+.stab-pane{display:none}
+.stab-pane.active{display:block}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;transition:background .3s,border-color .3s}
+.s-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.s-card-title{font-size:14px;font-weight:600;color:var(--text-1)}
+.s-card-desc{font-size:12px;color:var(--text-3);margin-top:2px}
+.s-card-body{padding:20px}
+
+/* BUTTONS */
+.btn-sm{padding:6px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:var(--surface);color:var(--text-2);transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-sm:hover{background:var(--hover-bg);color:var(--text-1)}
+.btn-sm.blue{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-sm.blue:hover{background:var(--blue-lt);border-color:var(--blue-lt)}
+.btn-sm.danger{border-color:rgba(229,57,53,.3);color:var(--danger);background:rgba(229,57,53,.05)}
+.btn-sm.danger:hover{background:rgba(229,57,53,.12)}
+.btn-sm.green{background:#2E7D32;color:white;border-color:#2E7D32}
+.btn-sm.green:hover{background:#388E3C;border-color:#388E3C}
+
+/* USER TABLE */
+.user-table{width:100%;border-collapse:collapse;font-size:13px}
+.user-table th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);padding:0 14px 12px;border-bottom:1px solid var(--border)}
+.user-table td{padding:12px 14px;border-bottom:1px solid var(--border-lt);color:var(--text-1);vertical-align:middle}
+.user-table tr:last-child td{border-bottom:none}
+.user-table tr.u-row:hover td{background:var(--hover-bg)}
+.ua{width:30px;height:30px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.u-info{display:flex;align-items:center;gap:10px}
+.role-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(21,101,192,.1);color:var(--blue);border:1px solid rgba(21,101,192,.2)}
+.role-badge.admin{background:rgba(123,31,162,.1);color:#7B1FA2;border-color:rgba(123,31,162,.2)}
+.pw-row{display:none;background:var(--hover-bg);border-top:1px solid var(--border-lt)}
+.pw-row td{padding:12px 14px}
+.pw-row.show{display:table-row}
+.pw-inner{display:flex;gap:8px;align-items:center}
+.pw-inner input{flex:1;height:34px;border:1px solid var(--border);border-radius:7px;padding:0 10px;font-size:13px;font-family:inherit;color:var(--text-1);background:var(--surface);outline:none;transition:border-color .2s,background .3s}
+.pw-inner input:focus{border-color:var(--blue-acc)}
+
+/* ADD USER FORM */
+.add-user-form{display:none;padding:16px;background:var(--hover-bg);border-radius:10px;margin-top:12px;border:1px solid var(--border)}
+.add-user-form.show{display:block}
+.fg{margin-bottom:0}
+.fg label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:5px}
+.fg input,.fg select{width:100%;height:36px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:13px;font-family:inherit;color:var(--text-1);background:var(--surface);outline:none;transition:border-color .2s,background .3s}
+.fg input:focus,.fg select:focus{border-color:var(--blue-acc);box-shadow:0 0 0 2px rgba(33,150,243,.1)}
+.fg select{cursor:pointer}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.form-actions{display:flex;gap:8px}
+
+/* DASH URL */
+.dash-url-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:background .3s,border-color .3s}
+.du-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.du-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.du-icon svg{width:20px;height:20px;fill:none;stroke-width:2}
+.du-name{font-size:14px;font-weight:600;color:var(--text-1)}
+.du-status{font-size:11px;margin-top:2px}
+.du-status.ok{color:var(--success)}
+.du-status.empty{color:var(--text-3)}
+.du-row{display:flex;gap:8px;align-items:center}
+.du-input{flex:1;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:12px;font-family:inherit;color:var(--text-1);background:var(--bg);outline:none;transition:border-color .2s,background .3s}
+.du-input:focus{border-color:var(--blue-acc);background:var(--surface)}
+.du-input::placeholder{color:var(--text-3)}
+
+/* DISPLAY (TOGGLE) */
+.disp-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border-lt)}
+.disp-row:last-child{border-bottom:none;padding-bottom:0}
+.disp-label{font-size:14px;font-weight:500;color:var(--text-1)}
+.disp-desc{font-size:12px;color:var(--text-3);margin-top:2px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:background .25s}
+.toggle input:checked+.toggle-track{background:var(--blue)}
+.toggle-track::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform .25s}
+.toggle input:checked+.toggle-track::after{transform:translateX(20px)}
+.lang-opts{display:flex;gap:8px}
+.lang-btn{padding:6px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s}
+.lang-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
+.lang-btn:hover:not(.active){background:var(--hover-bg);color:var(--text-1)}
+
+.sheets-bar{height:46px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;transition:background .3s,border-color .3s}
+.sheets-bar-info{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--text-2)}
+.sheets-bar-info svg{width:20px;height:20px;flex-shrink:0}
+.sheets-warn{margin-left:auto;font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:6px}
+.sheets-warn svg{width:13px;height:13px;stroke:var(--text-3);flex-shrink:0}
+.btn-ext{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:1px solid rgba(21,101,192,.3);background:rgba(21,101,192,.08);color:var(--blue-acc);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;transition:all .15s;flex-shrink:0}
+.btn-ext:hover{background:rgba(21,101,192,.15);border-color:rgba(21,101,192,.5)}
+.btn-ext svg{width:13px;height:13px;flex-shrink:0}
+#topbar-ext{display:none;margin-left:auto}
+.drive-view-toggle{display:flex;gap:3px;margin-left:auto;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:3px;transition:background .3s,border-color .3s}
+.dvt-btn{padding:4px 12px;border-radius:6px;border:none;background:none;font-size:11.5px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--text-2);display:flex;align-items:center;gap:5px;transition:all .15s}
+.dvt-btn:hover{background:var(--hover-bg);color:var(--text-1)}
+.dvt-btn.active{background:var(--surface);color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.dvt-btn svg{width:13px;height:13px;flex-shrink:0}
+.drive-icon-multi{width:20px;height:20px;flex-shrink:0}
+/* PICA TABLE */
+.pica-toolbar{padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;transition:background .3s,border-color .3s}
+.pica-filters{display:flex;gap:4px;flex-wrap:wrap}
+.pf-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text-2);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.pf-btn:hover{background:var(--hover-bg);color:var(--text-1)}
+.pf-btn.active{background:var(--blue);color:white;border-color:var(--blue)}
+.pf-btn.f-open.active{background:#C62828;border-color:#C62828}
+.pf-btn.f-progress.active{background:#E65100;border-color:#E65100}
+.pf-btn.f-closed.active{background:#2E7D32;border-color:#2E7D32}
+.pica-count{font-size:12px;color:var(--text-3);white-space:nowrap}
+.pica-tbar-right{display:flex;align-items:center;gap:6px;margin-left:auto}
+.pica-table-wrap{flex:1;overflow:auto;background:var(--bg);transition:background .3s}
+.pica-table{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+.pica-table thead th{background:var(--surface);border-bottom:2px solid var(--border);padding:10px 12px;text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-3);position:sticky;top:0;z-index:1;white-space:nowrap;transition:background .3s,border-color .3s}
+.pica-table tbody td{padding:8px 12px;border-bottom:1px solid var(--border-lt);vertical-align:top;color:var(--text-1);background:var(--surface);transition:background .3s}
+.pica-table tbody tr:hover td{background:var(--hover-bg)}
+.pica-cell{outline:none;min-height:18px;display:inline-block;width:100%;border-radius:4px;padding:2px 5px;margin:-2px -5px;cursor:text;transition:background .15s,box-shadow .15s;word-break:break-word;line-height:1.5}
+.pica-cell:hover{background:rgba(33,150,243,.07)}
+.pica-cell:focus{background:rgba(33,150,243,.11);box-shadow:0 0 0 2px rgba(33,150,243,.22)}
+.pica-cell.date-cell{min-width:90px;font-size:12px;color:var(--text-2)}
+.col-no{width:36px;text-align:center;color:var(--text-3);font-size:12px;font-weight:600}
+.col-action{width:38px}
+.col-status{width:110px}
+.col-date{width:100px}
+.col-pic{width:90px}
+.col-target{width:100px}
+.status-sel{border:none;background:transparent;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;border-radius:20px;padding:4px 8px;outline:none;width:100%}
+.status-sel:focus{outline:2px solid rgba(33,150,243,.3)}
+.st-open{background:rgba(229,57,53,.13);color:#C62828}
+.st-progress{background:rgba(245,124,0,.13);color:#BF360C}
+.st-closed{background:rgba(46,125,50,.13);color:#1B5E20}
+.del-row-btn{width:28px;height:28px;border-radius:6px;border:1px solid transparent;background:none;color:var(--text-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin:0 auto}
+.del-row-btn:hover{background:rgba(229,57,53,.1);border-color:rgba(229,57,53,.3);color:var(--danger)}
+.del-row-btn svg{width:13px;height:13px}
+.pica-empty{text-align:center;padding:60px 20px;color:var(--text-3);font-size:13px;background:var(--surface) !important}
+.open-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(229,57,53,.12);color:#C62828}
+.progress-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(245,124,0,.12);color:#BF360C}
+.closed-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(46,125,50,.12);color:#1B5E20}
+.pica-summary{display:flex;gap:8px;align-items:center;padding:8px 20px;background:var(--bg);border-bottom:1px solid var(--border-lt);font-size:12px;color:var(--text-3);flex-shrink:0;flex-wrap:wrap;transition:background .3s}
+.pica-summary .sum-item{display:flex;align-items:center;gap:5px}
+.pica-summary .sum-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text-1);color:var(--surface);padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:999;display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-left">
+    <div class="brand-mark">
+      <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg></div>
+      <div><div class="brand-name">AGP</div><div class="brand-sub">Project Dashboard Portal</div></div>
+    </div>
+    <div class="login-tagline">One Place.<br>My Project Dashboard.</div>
+    <div class="login-desc">Centralized Project Dashboard</div>
+    <div class="login-badges">
+      <span class="badge">Project Monitoring</span>
+      <span class="badge">Timeline</span>
+      <span class="badge">Resources</span>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-box">
+      <h2 data-i18n="login.title">Welcome back!</h2>
+      <p data-i18n="login.sub">Enter your account to login.</p>
+      <div id="login-error" class="login-error"></div>
+      <div class="form-group">
+        <label data-i18n="login.username">Username</label>
+        <input class="f-input" type="text" id="inp-user" placeholder="Username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label data-i18n="login.password">Password</label>
+        <input class="f-input" type="password" id="inp-pass" placeholder="Password" autocomplete="current-password">
+      </div>
+      <div class="form-row">
+        <label class="check-wrap"><input type="checkbox" id="remember"> <span data-i18n="login.remember">Ingat saya</span></label>
+        <a href="#" class="forgot" data-i18n="login.forgot">Lupa password?</a>
+      </div>
+      <button class="btn-primary" onclick="doLogin()"><span data-i18n="login.btn">Masuk</span></button>
+      <div class="login-footer">AGP Project Dashboard &nbsp;·&nbsp; v2.2.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app-screen">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg></div>
+      <div><div class="logo-text">AGP</div><div class="logo-sub">Dashboard Portal</div></div>
+    </div>
+    <div class="sb-section" data-i18n="nav.mainMenu">Menu Utama</div>
+    <button class="nav-item active" id="nav-sto" onclick="switchDash('sto',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+      <span data-i18n="nav.sto">Progress Monitoring</span><span class="nav-badge">Live</span>
+    </button>
+    <button class="nav-item" id="nav-timeline" onclick="switchDash('timeline',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="8" y1="18" x2="14" y2="18"/></svg></span>
+      <span data-i18n="nav.timeline">Timeline</span>
+    </button>
+    <button class="nav-item" id="nav-sheets" onclick="switchDash('sheets',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg></span>
+      <span data-i18n="nav.sheets">Data Source</span>
+    </button>
+    <button class="nav-item" id="nav-pica" onclick="switchDash('pica',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+      <span data-i18n="nav.pica">PICA Management</span>
+    </button>
+    <button class="nav-item" id="nav-team" onclick="switchDash('team',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+      <span data-i18n="nav.team">My Team</span>
+    </button>
+    <button class="nav-item" id="nav-drive" onclick="switchDash('drive',this)">
+      <span class="ni">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="0" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.5 2L2 13.5l3 5L14 2z" fill="#0F9D58"/>
+          <path d="M14 2l8.5 14.5H8.5L5 13.5z" fill="#4285F4" opacity=".9"/>
+          <path d="M5 13.5L2 18.5H22l-2.5-5H8.5z" fill="#FFBB00" opacity=".95"/>
+        </svg>
+      </span>
+      <span data-i18n="nav.drive">Staging Drive</span>
+    </button>
+    <hr class="sb-divider">
+    <div class="sb-section" data-i18n="nav.other">Lainnya</div>
+    <button class="nav-item" id="nav-settings" onclick="switchDash('settings',this)">
+      <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span data-i18n="nav.settings">Pengaturan</span>
+    </button>
+    <div class="sb-footer">
+      <div class="user-chip">
+        <div class="user-av" id="user-av">AD</div>
+        <div><div class="user-name-s" id="user-name-s">Admin</div><div class="user-role-s" id="user-role-s">First-Line Manager</div></div>
+        <button class="logout-btn" onclick="doLogout()" title="Keluar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div><div class="topbar-title" id="topbar-title">STO Monitoring Dashboard</div><div class="topbar-sub" id="topbar-sub">Real-time station monitoring overview</div></div>
+      <div class="topbar-pill" id="live-pill"><span class="dot"></span> Live</div>
+      <a id="topbar-ext" class="btn-ext" href="https://docs.google.com/spreadsheets/d/11lRU7reYoCX9X7-mymWfUfrmPtuW4l4e00OUTP8KNfE/edit?usp=sharing" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span id="topbar-ext-label" data-i18n="sheets.open">Buka Google Sheets</span>
+      </a>
+      <div class="topbar-date" id="topbar-date"></div>
+    </header>
+    <div class="content-pane">
+
+      <!-- STO -->
+      <div class="dash-panel active" id="panel-sto">
+        <iframe src="https://datastudio.google.com/embed/reporting/ca271113-7b23-4ff8-b58e-6faf4aad582c/page/9KJtF" allowfullscreen title="STO Monitoring"></iframe>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="dash-panel" id="panel-timeline">
+        <div class="sheets-bar">
+          <div class="sheets-bar-info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span data-i18n="timeline.label">Timeline — Google Sheets</span>
+          </div>
+          <div class="sheets-warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-i18n="sheets.warn">Pastikan sudah login ke Google dengan akun yang memiliki akses edit.</span>
+          </div>
+          <a class="btn-ext" href="https://docs.google.com/spreadsheets/d/1jyvoITPs6gCZZIJT4fat1xIjrzNi928P/edit?usp=sharing" target="_blank" rel="noopener" style="margin-left:16px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span data-i18n="sheets.open">Open Google Sheets</span>
+          </a>
+        </div>
+        <iframe
+          src="https://docs.google.com/spreadsheets/d/1jyvoITPs6gCZZIJT4fat1xIjrzNi928P/edit?embedded=true&rm=minimal"
+          allowfullscreen
+          allow="clipboard-read; clipboard-write"
+          title="Timeline — Google Sheets"
+          style="flex:1;border:none;width:100%;display:block">
+        </iframe>
+      </div>
+
+      <!-- SHEETS -->
+      <div class="dash-panel" id="panel-sheets">
+        <div class="sheets-bar">
+          <div class="sheets-bar-info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+            <span data-i18n="sheets.label">Data Spreadsheet — Google Sheets</span>
+          </div>
+          <div class="sheets-warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-i18n="sheets.warn">Pastikan sudah login ke Google dengan akun yang memiliki akses edit.</span>
+          </div>
+          <a class="btn-ext" href="https://docs.google.com/spreadsheets/d/11lRU7reYoCX9X7-mymWfUfrmPtuW4l4e00OUTP8KNfE/edit?usp=sharing" target="_blank" rel="noopener" style="margin-left:16px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span data-i18n="sheets.open">Open Google Sheets</span>
+          </a>
+        </div>
+        <iframe
+          src="https://docs.google.com/spreadsheets/d/11lRU7reYoCX9X7-mymWfUfrmPtuW4l4e00OUTP8KNfE/edit?usp=sharing&embedded=true&rm=minimal"
+          allowfullscreen
+          allow="clipboard-read; clipboard-write"
+          title="Google Sheets — Data Spreadsheet"
+          style="flex:1;border:none;width:100%;display:block">
+        </iframe>
+      </div>
+
+      <!-- PICA -->
+      <div class="dash-panel" id="panel-pica">
+        <div class="pica-toolbar">
+          <div class="pica-filters">
+            <button class="pf-btn active" data-filter="all"      onclick="setPicaFilter('all',this)"      data-i18n="pica.f.all">Semua</button>
+            <button class="pf-btn f-open"  data-filter="open"    onclick="setPicaFilter('open',this)"     data-i18n="pica.f.open">🔴 Open</button>
+            <button class="pf-btn f-progress" data-filter="progress" onclick="setPicaFilter('progress',this)" data-i18n="pica.f.progress">🟠 In Progress</button>
+            <button class="pf-btn f-closed" data-filter="closed" onclick="setPicaFilter('closed',this)"   data-i18n="pica.f.closed">🟢 Closed</button>
+          </div>
+          <span class="pica-count" id="pica-count">0 item</span>
+          <div class="pica-tbar-right">
+            <button class="btn-sm blue" onclick="addPicaRow()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="pica.add">Tambah Baris</span>
+            </button>
+            <button class="btn-sm" onclick="exportPicaCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span data-i18n="pica.export">Export CSV</span>
+            </button>
+          </div>
+        </div>
+        <div class="pica-summary" id="pica-summary"></div>
+        <div class="pica-table-wrap">
+          <table class="pica-table">
+            <thead><tr>
+              <th class="col-no">No.</th>
+              <th class="col-date"  data-i18n="pica.col.date">Tanggal</th>
+              <th                   data-i18n="pica.col.problem">Masalah / Problem</th>
+              <th                   data-i18n="pica.col.root">Akar Masalah</th>
+              <th                   data-i18n="pica.col.cm">Countermeasure</th>
+              <th class="col-pic"   data-i18n="pica.col.pic">PIC</th>
+              <th class="col-target" data-i18n="pica.col.target">Target</th>
+              <th class="col-status" data-i18n="pica.col.status">Status</th>
+              <th class="col-action"></th>
+            </tr></thead>
+            <tbody id="pica-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="dash-panel" id="panel-team">
+        <div class="pica-toolbar">
+          <div style="font-size:14px;font-weight:600;color:var(--text-1)" data-i18n="team.heading">Informasi Tim</div>
+          <span class="pica-count" id="team-count">0 anggota</span>
+          <div class="pica-tbar-right">
+            <button class="btn-sm blue" onclick="addTeamRow()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="team.add">Tambah Anggota</span>
+            </button>
+            <button class="btn-sm" onclick="exportTeamCSV()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span data-i18n="pica.export">Export CSV</span>
+            </button>
+          </div>
+        </div>
+        <div class="pica-table-wrap">
+          <table class="pica-table" style="min-width:640px">
+            <thead><tr>
+              <th class="col-no">No.</th>
+              <th style="width:140px" data-i18n="team.col.role">Role</th>
+              <th data-i18n="team.col.desc">Description</th>
+              <th style="width:150px" data-i18n="team.col.name">Name</th>
+              <th style="width:190px" data-i18n="team.col.email">Email</th>
+              <th class="col-action"></th>
+            </tr></thead>
+            <tbody id="team-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DRIVE -->
+      <div class="dash-panel" id="panel-drive">
+        <div class="sheets-bar">
+          <div class="sheets-bar-info">
+            <svg class="drive-icon-multi" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+              <path d="M43.65 25L29.9 1.2C28.55 2 27.4 3.1 26.6 4.5L1.2 48.5c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+              <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8l5.85 11.6z" fill="#ea4335"/>
+              <path d="M43.65 25L57.4 1.2C56.05.4 54.5 0 52.9 0H34.4c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+              <path d="M59.8 53H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+              <path d="M73.4 26.5l-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25 59.8 53h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+            </svg>
+            <span data-i18n="drive.label">STAGING — Google Drive</span>
+          </div>
+          <div class="drive-view-toggle">
+            <button class="dvt-btn active" id="dvt-list" onclick="setDriveView('list')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <span data-i18n="drive.list">List</span>
+            </button>
+            <button class="dvt-btn" id="dvt-grid" onclick="setDriveView('grid')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              <span data-i18n="drive.grid">Grid</span>
+            </button>
+          </div>
+          <div class="sheets-warn" style="margin-left:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-i18n="drive.warn">Pastikan sudah login ke Google dan memiliki akses ke folder ini.</span>
+          </div>
+          <a class="btn-ext" href="https://drive.google.com/drive/u/0/folders/1OHrbA3ThQvhoHPJ9KfNmOuovcPfPNLli" target="_blank" rel="noopener" style="margin-left:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span data-i18n="drive.open">Buka Google Drive</span>
+          </a>
+        </div>
+        <iframe
+          id="drive-iframe"
+          src="https://drive.google.com/embeddedfolderview?id=1OHrbA3ThQvhoHPJ9KfNmOuovcPfPNLli#list"
+          allowfullscreen
+          title="STAGING — Google Drive"
+          style="flex:1;border:none;width:100%;display:block;background:white">
+        </iframe>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="dash-panel" id="panel-settings">
+        <div class="settings-wrap">
+          <div class="settings-header">
+            <h2 data-i18n="s.title">Pengaturan</h2>
+            <p data-i18n="s.sub">Kelola pengguna, konfigurasi dashboard, dan preferensi tampilan.</p>
+          </div>
+          <div id="access-notice" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(245,124,0,.08);border:1px solid rgba(245,124,0,.3);border-radius:10px;font-size:13px;color:var(--warning);line-height:1.6">
+            <strong data-i18n="notice.title">Akses Terbatas</strong> — <span data-i18n="notice.sub">Role Anda hanya dapat mengubah password akun sendiri. Hubungi Administrator untuk perubahan lainnya.</span>
+          </div>
+          <div class="stabs" id="settings-tabs">
+            <button class="stab active" onclick="showStab('users',this)" data-i18n="s.tab.users">Pengguna</button>
+            <button class="stab admin-tab" onclick="showStab('dash',this)" data-i18n="s.tab.dash">Dashboard URL</button>
+            <button class="stab admin-tab" onclick="showStab('display',this)" data-i18n="s.tab.display">Tampilan</button>
+          </div>
+
+          <!-- TAB: USERS -->
+          <div class="stab-pane active" id="stab-users">
+            <div class="s-card">
+              <div class="s-card-head">
+                <div><div class="s-card-title" data-i18n="s.u.title">Daftar Pengguna</div><div class="s-card-desc" data-i18n="s.u.sub">Kelola akun yang dapat mengakses portal ini.</div></div>
+                <button class="btn-sm blue btn-add-user" onclick="toggleAddForm()" data-i18n="s.u.add">+ Tambah Pengguna</button>
+              </div>
+              <div class="s-card-body" style="padding:0">
+                <table class="user-table">
+                  <thead><tr>
+                    <th data-i18n="s.u.col.user">Pengguna</th>
+                    <th data-i18n="s.u.col.role">Role</th>
+                    <th data-i18n="s.u.col.action">Aksi</th>
+                  </tr></thead>
+                  <tbody id="user-tbody"></tbody>
+                </table>
+                <div class="add-user-form" id="add-user-form" style="margin:0;border-radius:0;border-left:none;border-right:none;border-bottom:none">
+                  <div class="form-grid-3">
+                    <div class="fg"><label data-i18n="s.u.form.uname">Username</label><input type="text" id="new-uname" placeholder="username"></div>
+                    <div class="fg"><label data-i18n="s.u.form.pass">Password</label><input type="password" id="new-pass" placeholder="password"></div>
+                    <div class="fg"><label data-i18n="s.u.form.role">Role</label>
+                      <select id="new-role">
+                        <option value="Administrator">Administrator</option>
+                        <option value="First-Line Manager" selected>First-Line Manager</option>
+                        <option value="Viewer">Viewer</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button class="btn-sm green" onclick="addUser()" data-i18n="s.u.form.save">Simpan Pengguna</button>
+                    <button class="btn-sm" onclick="toggleAddForm()" data-i18n="s.u.form.cancel">Batal</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: DASHBOARD URL -->
+          <div class="stab-pane" id="stab-dash">
+            <div class="s-card">
+              <div class="s-card-head">
+                <div><div class="s-card-title" data-i18n="s.d.title">Konfigurasi Dashboard URL</div><div class="s-card-desc" data-i18n="s.d.sub">Masukkan URL embed iframe Looker / Google Data Studio untuk setiap dashboard.</div></div>
+              </div>
+              <div class="s-card-body">
+
+                <div class="dash-url-card">
+                  <div class="du-head">
+                    <div class="du-icon" style="background:rgba(21,101,192,.1)"><svg viewBox="0 0 24 24" stroke="var(--blue)"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+                    <div><div class="du-name">STO Monitoring</div><div class="du-status ok" id="sto-status">● URL aktif</div></div>
+                  </div>
+                  <div class="du-row">
+                    <input class="du-input" type="text" id="url-sto" placeholder="https://datastudio.google.com/embed/...">
+                    <button class="btn-sm blue" onclick="saveDashUrl('sto')" data-i18n="s.d.save">Simpan</button>
+                    <button class="btn-sm danger" onclick="clearDashUrl('sto')" data-i18n="s.d.clear">Hapus</button>
+                  </div>
+                </div>
+
+                <div class="dash-url-card">
+                  <div class="du-head">
+                    <div class="du-icon" style="background:rgba(46,125,50,.1)"><svg viewBox="0 0 24 24" stroke="#2E7D32"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+                    <div><div class="du-name">Print Usage</div><div class="du-status empty" id="print-status">○ Belum dikonfigurasi</div></div>
+                  </div>
+                  <div class="du-row">
+                    <input class="du-input" type="text" id="url-print" placeholder="https://datastudio.google.com/embed/...">
+                    <button class="btn-sm blue" onclick="saveDashUrl('print')" data-i18n="s.d.save">Simpan</button>
+                    <button class="btn-sm danger" onclick="clearDashUrl('print')" data-i18n="s.d.clear">Hapus</button>
+                  </div>
+                </div>
+
+                <div class="dash-url-card">
+                  <div class="du-head">
+                    <div class="du-icon" style="background:rgba(230,81,0,.1)"><svg viewBox="0 0 24 24" stroke="#E65100"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+                    <div><div class="du-name">MIF MASO 3</div><div class="du-status empty" id="mif-status">○ Belum dikonfigurasi</div></div>
+                  </div>
+                  <div class="du-row">
+                    <input class="du-input" type="text" id="url-mif" placeholder="https://datastudio.google.com/embed/...">
+                    <button class="btn-sm blue" onclick="saveDashUrl('mif')" data-i18n="s.d.save">Simpan</button>
+                    <button class="btn-sm danger" onclick="clearDashUrl('mif')" data-i18n="s.d.clear">Hapus</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: DISPLAY -->
+          <div class="stab-pane" id="stab-display">
+            <div class="s-card">
+              <div class="s-card-head"><div class="s-card-title" data-i18n="s.dp.title">Preferensi Tampilan</div></div>
+              <div class="s-card-body">
+                <div class="disp-row">
+                  <div><div class="disp-label" data-i18n="s.dp.dark">Mode Gelap</div><div class="disp-desc" data-i18n="s.dp.darkDesc">Ganti tampilan ke tema gelap untuk kenyamanan di lingkungan redup.</div></div>
+                  <label class="toggle"><input type="checkbox" id="dark-toggle" onchange="toggleDark(this.checked)"><span class="toggle-track"></span></label>
+                </div>
+                <div class="disp-row">
+                  <div><div class="disp-label" data-i18n="s.dp.lang">Bahasa Interface</div><div class="disp-desc" data-i18n="s.dp.langDesc">Pilih bahasa tampilan portal.</div></div>
+                  <div class="lang-opts">
+                    <button class="lang-btn active" id="btn-id" onclick="setLang('id')">Indonesia</button>
+                    <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /settings-wrap -->
+      </div><!-- /panel-settings -->
+
+    </div><!-- /content-pane -->
+  </div><!-- /main-area -->
+</div><!-- /app-screen -->
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+const STO_URL = 'https://datastudio.google.com/embed/reporting/ca271113-7b23-4ff8-b58e-6faf4aad582c/page/9KJtF';
+
+const DEFAULT_USERS = [
+  {username:'admin',   password:'astra2025', role:'Administrator'},
+  {username:'manager', password:'manager123',role:'First-Line Manager'}
+];
+
+let users       = JSON.parse(localStorage.getItem('astra_users')      || 'null') || DEFAULT_USERS.map(u=>({...u}));
+let dashUrls    = JSON.parse(localStorage.getItem('astra_urls')       || 'null') || {sto:STO_URL, print:'', mif:''};
+let currentDash = 'sto';
+let currentLang = localStorage.getItem('astra_lang') || 'id';
+let loggedUser  = null;
+
+const LANG = {
+  id:{
+    'login.title':'Selamat datang kembali','login.sub':'Masuk ke akun Anda untuk mengakses dashboard.',
+    'login.username':'Username','login.password':'Password','login.remember':'Ingat saya',
+    'login.forgot':'Lupa password?','login.btn':'Masuk',
+    'login.err.empty':'Username dan password wajib diisi.','login.err.wrong':'Username atau password salah.',
+    'nav.mainMenu':'Menu Utama','nav.sto':'STO Monitoring',
+    'nav.timeline':'Timeline','nav.sheets':'Data Spreadsheet','nav.pica':'Tabel PICA','nav.team':'Team Information','nav.drive':'Staging Drive','nav.other':'Lainnya','nav.settings':'Pengaturan',
+    'ph.print':'Dashboard Print Usage','ph.mif':'Dashboard MIF MASO 3',
+    'ph.sub':'URL belum dikonfigurasi. Tambahkan link laporan di Pengaturan → Dashboard URL.',
+    'ph.badge':'Belum Dikonfigurasi','ph.goto':'Buka Pengaturan →',
+    's.title':'Pengaturan','s.sub':'Kelola pengguna, konfigurasi dashboard, dan preferensi tampilan.',
+    's.tab.users':'Pengguna','s.tab.dash':'Dashboard URL','s.tab.display':'Tampilan',
+    's.u.title':'Daftar Pengguna','s.u.sub':'Kelola akun yang dapat mengakses portal ini.',
+    's.u.add':'+ Tambah Pengguna','s.u.col.user':'Pengguna','s.u.col.role':'Role','s.u.col.action':'Aksi',
+    's.u.form.uname':'Username','s.u.form.pass':'Password','s.u.form.role':'Role',
+    's.u.form.save':'Simpan Pengguna','s.u.form.cancel':'Batal',
+    's.d.title':'Konfigurasi Dashboard URL','s.d.sub':'Masukkan URL embed iframe untuk setiap dashboard.',
+    's.d.save':'Simpan','s.d.clear':'Hapus',
+    's.dp.title':'Preferensi Tampilan','s.dp.dark':'Mode Gelap',
+    's.dp.darkDesc':'Ganti tampilan ke tema gelap untuk kenyamanan di lingkungan redup.',
+    's.dp.lang':'Bahasa Interface','s.dp.langDesc':'Pilih bahasa tampilan portal.',
+    'dash.sto.title':'STO Monitoring Dashboard','dash.sto.sub':'Real-time station monitoring overview',
+    'dash.timeline.title':'Timeline','dash.timeline.sub':'Jadwal dan rencana proyek — Google Sheets',
+    'dash.sheets.title':'Data Spreadsheet','dash.sheets.sub':'Google Sheets — data dan laporan terkait',
+    'dash.pica.title':'Tabel PICA','dash.pica.sub':'Problem Identification, Countermeasure & Action',
+    'dash.team.title':'My Team','dash.team.sub':'Data anggota tim dan kontak',
+    'dash.drive.title':'Staging Drive','dash.drive.sub':'Direktori file dan dokumen proyek',
+    'dash.settings.title':'Pengaturan','dash.settings.sub':'Manajemen pengguna, URL, dan tampilan',
+    'logout.confirm':'Yakin ingin keluar dari portal?',
+    'toast.saved':'Perubahan tersimpan','toast.userAdded':'Pengguna berhasil ditambahkan',
+    'toast.userDeleted':'Pengguna dihapus','toast.pwChanged':'Password berhasil diubah',
+    'toast.urlSaved':'URL dashboard disimpan','toast.urlCleared':'URL dashboard dihapus',
+    'err.unameTaken':'Username sudah digunakan.','err.fillAll':'Harap isi semua kolom.',
+    'err.sameUser':'Tidak dapat menghapus akun yang sedang login.',
+    'err.lastAdmin':'Minimal harus ada satu Administrator.',
+    'sheets.open':'Buka Google Sheets','sheets.label':'Data Spreadsheet — Google Sheets',
+    'sheets.warn':'Pastikan sudah login ke Google dengan akun yang memiliki akses edit.',
+    'timeline.label':'Timeline — Google Sheets',
+    'drive.label':'STAGING — Google Drive','drive.open':'Buka Google Drive',
+    'drive.list':'List','drive.grid':'Grid',
+    'drive.warn':'Pastikan sudah login ke Google dan memiliki akses ke folder ini.',
+    'team.heading':'Informasi Tim','team.add':'Tambah Anggota',
+    'team.col.role':'Role','team.col.desc':'Description','team.col.name':'Name','team.col.email':'Email',
+    'pica.add':'Tambah Baris','pica.export':'Export CSV',
+    'pica.f.all':'Semua','pica.f.open':'🔴 Open','pica.f.progress':'🟠 In Progress','pica.f.closed':'🟢 Closed',
+    'pica.col.date':'Tanggal','pica.col.problem':'Masalah / Problem','pica.col.root':'Akar Masalah',
+    'pica.col.cm':'Countermeasure','pica.col.pic':'PIC','pica.col.target':'Target','pica.col.status':'Status',
+    'notice.title':'Akses Terbatas','notice.sub':'Role Anda hanya dapat mengubah password akun sendiri. Hubungi Administrator untuk perubahan lainnya.',
+    'btn.changePw':'Ganti Password','btn.delete':'Hapus','btn.save':'Simpan','btn.cancel':'Batal'
+  },
+  en:{
+    'login.title':'Welcome back','login.sub':'Sign in to your account to access dashboards.',
+    'login.username':'Username','login.password':'Password','login.remember':'Remember me',
+    'login.forgot':'Forgot password?','login.btn':'Sign In',
+    'login.err.empty':'Username and password are required.','login.err.wrong':'Incorrect username or password.',
+    'nav.mainMenu':'Main Menu','nav.sto':'Project Monitoring',
+    'nav.timeline':'Timeline','nav.sheets':'Data Source','nav.pica':'PICA Management','nav.team':'My Team','nav.drive':'Staging Drive','nav.other':'Other','nav.settings':'Settings',
+    'ph.print':'Print Usage Dashboard','ph.mif':'MIF MASO 3 Dashboard',
+    'ph.sub':'URL not configured. Add a report link in Settings → Dashboard URL.',
+    'ph.badge':'Not Configured','ph.goto':'Open Settings →',
+    's.title':'Settings','s.sub':'Manage users, configure dashboards, and display preferences.',
+    's.tab.users':'Users','s.tab.dash':'Dashboard URLs','s.tab.display':'Display',
+    's.u.title':'User List','s.u.sub':'Manage accounts that can access this portal.',
+    's.u.add':'+ Add User','s.u.col.user':'User','s.u.col.role':'Role','s.u.col.action':'Actions',
+    's.u.form.uname':'Username','s.u.form.pass':'Password','s.u.form.role':'Role',
+    's.u.form.save':'Save User','s.u.form.cancel':'Cancel',
+    's.d.title':'Dashboard URL Configuration','s.d.sub':'Enter the embed iframe URL for each dashboard.',
+    's.d.save':'Save','s.d.clear':'Clear',
+    's.dp.title':'Display Preferences','s.dp.dark':'Dark Mode',
+    's.dp.darkDesc':'Switch to dark theme for comfort in dim environments.',
+    's.dp.lang':'Interface Language','s.dp.langDesc':'Choose the portal display language.',
+    'dash.sto.title':'Project Monitoring Dashboard','dash.sto.sub':'Real-time station monitoring overview',
+    'dash.timeline.title':'Timeline','dash.timeline.sub':'Project schedule and plan — Google Sheets',
+    'dash.sheets.title':'Data Source','dash.sheets.sub':'Google Sheets — related data and reports',
+    'dash.pica.title':'PICA Management','dash.pica.sub':'Problem Identification, Corrective & Action',
+    'dash.team.title':'My Team','dash.team.sub':'Team member data and contacts',
+    'dash.drive.title':'Staging Drive','dash.drive.sub':'Project file and document directory',
+    'dash.settings.title':'Settings','dash.settings.sub':'User management, URLs, and display',
+    'sheets.open':'Open Google Sheets','sheets.label':'Data Spreadsheet — Google Sheets',
+    'sheets.warn':'Make sure you are signed in to Google with an account that has edit access.',
+    'timeline.label':'Timeline — Google Sheets',
+    'drive.label':'STAGING — Google Drive','drive.open':'Open Google Drive',
+    'drive.list':'List','drive.grid':'Grid',
+    'drive.warn':'Make sure you are signed in to Google and have access to this folder.',
+    'team.heading':'My Team','team.add':'Add Member',
+    'team.col.role':'Role','team.col.desc':'Description','team.col.name':'Name','team.col.email':'Email',
+    'pica.f.all':'All','pica.f.open':'🔴 Open','pica.f.progress':'🟠 In Progress','pica.f.closed':'🟢 Closed',
+    'pica.add':'Add Row','pica.export':'Export CSV',
+    'pica.col.date':'Date','pica.col.problem':'Problem','pica.col.root':'Root Cause',
+    'pica.col.cm':'Corrective & Action','pica.col.pic':'PIC','pica.col.target':'Target','pica.col.status':'Status',
+    'notice.title':'Limited Access','notice.sub':'Your role can only change your own password. Contact an Administrator for other changes.',
+    'logout.confirm':'Are you sure you want to sign out?',
+    'toast.saved':'Changes saved','toast.userAdded':'User added successfully',
+    'toast.userDeleted':'User deleted','toast.pwChanged':'Password changed successfully',
+    'toast.urlSaved':'Dashboard URL saved','toast.urlCleared':'Dashboard URL cleared',
+    'err.unameTaken':'Username already taken.','err.fillAll':'Please fill in all fields.',
+    'err.sameUser':'Cannot delete the account currently logged in.',
+    'err.lastAdmin':'At least one Administrator must remain.',
+    'notice.title':'Limited Access','notice.sub':'Your role can only change your own password. Contact an Administrator for other changes.',
+    'btn.changePw':'Change Password','btn.delete':'Delete','btn.save':'Save','btn.cancel':'Cancel'
+  }
+};
+
+const t = key => (LANG[currentLang]||LANG.id)[key] || key;
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(t(k) !== k) el.textContent = t(k);
+  });
+  document.querySelector('#btn-id').classList.toggle('active', currentLang==='id');
+  document.querySelector('#btn-en').classList.toggle('active', currentLang==='en');
+  document.documentElement.lang = currentLang;
+  updateTopbar();
+}
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('astra_lang', lang);
+  applyLang();
+  renderUserTable();
+}
+
+function updateDate(){
+  const opts = currentLang==='id'
+    ? {weekday:'long',day:'2-digit',month:'long',year:'numeric'}
+    : {weekday:'long',day:'2-digit',month:'long',year:'numeric'};
+  document.getElementById('topbar-date').textContent =
+    new Date().toLocaleDateString(currentLang==='id'?'id-ID':'en-US', opts);
+}
+
+function toggleDark(checked){
+  document.documentElement.setAttribute('data-theme', checked?'dark':'light');
+  localStorage.setItem('astra_theme', checked?'dark':'light');
+}
+
+let toastTimer;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2800);
+}
+
+/* ── LOGIN ── */
+function doLogin(){
+  const u = document.getElementById('inp-user').value.trim();
+  const p = document.getElementById('inp-pass').value;
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  if(!u||!p){ err.textContent = t('login.err.empty'); err.style.display='block'; return; }
+  const found = users.find(x=>x.username===u && x.password===p);
+  if(found){
+    loggedUser = found;
+    const initials = u.slice(0,2).toUpperCase();
+    document.getElementById('user-av').textContent = initials;
+    document.getElementById('user-name-s').textContent = u.charAt(0).toUpperCase()+u.slice(1);
+    document.getElementById('user-role-s').textContent = found.role;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.add('visible');
+  } else {
+    err.textContent = t('login.err.wrong');
+    err.style.display = 'block';
+    document.getElementById('inp-pass').value = '';
+  }
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && !document.getElementById('login-screen').classList.contains('hidden')) doLogin();
+});
+
+function doLogout(){
+  if(!confirm(t('logout.confirm'))) return;
+  document.getElementById('app-screen').classList.remove('visible');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('inp-user').value='';
+  document.getElementById('inp-pass').value='';
+  loggedUser = null;
+  switchDash('sto', document.getElementById('nav-sto'));
+}
+
+/* ── NAVIGATION ── */
+const DRIVE_URL    = 'https://drive.google.com/drive/u/0/folders/1OHrbA3ThQvhoHPJ9KfNmOuovcPfPNLli';
+const TIMELINE_URL = 'https://docs.google.com/spreadsheets/d/1jyvoITPs6gCZZIJT4fat1xIjrzNi928P/edit?usp=sharing';
+const SHEETS_URL   = 'https://docs.google.com/spreadsheets/d/11lRU7reYoCX9X7-mymWfUfrmPtuW4l4e00OUTP8KNfE/edit?usp=sharing';
+
+const dashMeta = {
+  sto:     {titleKey:'dash.sto.title',     subKey:'dash.sto.sub',     live:true,  ext:false, extUrl:'',           extLabel:''},
+  timeline:{titleKey:'dash.timeline.title',subKey:'dash.timeline.sub',live:false, ext:true,  extUrl:TIMELINE_URL, extLabel:'sheets.open'},
+  sheets:  {titleKey:'dash.sheets.title',  subKey:'dash.sheets.sub',  live:false, ext:true,  extUrl:SHEETS_URL,   extLabel:'sheets.open'},
+  pica:    {titleKey:'dash.pica.title',    subKey:'dash.pica.sub',    live:false, ext:false, extUrl:'',           extLabel:''},
+  team:    {titleKey:'dash.team.title',    subKey:'dash.team.sub',    live:false, ext:false, extUrl:'',           extLabel:''},
+  drive:   {titleKey:'dash.drive.title',   subKey:'dash.drive.sub',   live:false, ext:true,  extUrl:DRIVE_URL,    extLabel:'drive.open'},
+  settings:{titleKey:'dash.settings.title',subKey:'dash.settings.sub',live:false, ext:false, extUrl:'',           extLabel:''}
+};
+
+function updateTopbar(){
+  const m = dashMeta[currentDash];
+  if(!m) return;
+  document.getElementById('topbar-title').textContent = t(m.titleKey);
+  document.getElementById('topbar-sub').textContent   = t(m.subKey);
+  document.getElementById('live-pill').style.display  = m.live ? 'flex' : 'none';
+  const extBtn   = document.getElementById('topbar-ext');
+  const extLabel = document.getElementById('topbar-ext-label');
+  extBtn.style.display = m.ext ? 'flex' : 'none';
+  if(m.ext && m.extUrl)   extBtn.href = m.extUrl;
+  if(m.extLabel && extLabel) extLabel.textContent = t(m.extLabel);
+}
+
+function switchDash(key, btn){
+  currentDash = key;
+  document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+key).classList.add('active');
+  btn.classList.add('active');
+  updateTopbar();
+  if(key==='settings'){ refreshSettingsForRole(); renderUserTable(); loadDashUrlInputs(); }
+  if(key==='pica')    { renderPica(); }
+  if(key==='team')    { renderTeam(); }
+}
+
+function setDriveView(view){
+  const iframe = document.getElementById('drive-iframe');
+  const FOLDER = '1OHrbA3ThQvhoHPJ9KfNmOuovcPfPNLli';
+  if(iframe) iframe.src = `https://drive.google.com/embeddedfolderview?id=${FOLDER}#${view}`;
+  document.querySelectorAll('.dvt-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('dvt-'+view);
+  if(btn) btn.classList.add('active');
+}
+
+function goSettings(){
+  switchDash('settings', document.getElementById('nav-settings'));
+  if(isAdmin()) setTimeout(()=>showStab('dash', document.querySelectorAll('.stab')[1]),100);
+}
+
+/* ── SETTINGS TABS ── */
+function showStab(tab, btn){
+  document.querySelectorAll('.stab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('stab-'+tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function isAdmin(){ return !!(loggedUser && loggedUser.role==='Administrator'); }
+
+function refreshSettingsForRole(){
+  const admin = isAdmin();
+  document.querySelectorAll('.admin-tab').forEach(t => t.style.display = admin ? '' : 'none');
+  document.querySelectorAll('.btn-add-user').forEach(b => b.style.display = admin ? '' : 'none');
+  document.getElementById('access-notice').style.display = admin ? 'none' : 'block';
+  if(!admin){
+    const firstTab = document.querySelector('.stab');
+    if(firstTab) showStab('users', firstTab);
+  }
+}
+
+/* ── USER MANAGEMENT ── */
+function saveUsers(){ localStorage.setItem('astra_users', JSON.stringify(users)); }
+
+function renderUserTable(){
+  const tbody = document.getElementById('user-tbody');
+  tbody.innerHTML = '';
+  const admin = isAdmin();
+  const visibleUsers = admin ? users : users.filter(u => u.username === loggedUser?.username);
+
+  visibleUsers.forEach(u => {
+    const realIdx   = users.indexOf(u);
+    const initials  = u.username.slice(0,2).toUpperCase();
+    const isAdminRole = u.role==='Administrator';
+    const isOwnRow  = loggedUser && u.username === loggedUser.username;
+
+    let buttons = '';
+    if(admin){
+      buttons = `<button class="btn-sm" onclick="togglePwRow(${realIdx})">${t('btn.changePw')}</button>
+                 <button class="btn-sm danger" onclick="deleteUser(${realIdx})">${t('btn.delete')}</button>`;
+    } else if(isOwnRow){
+      buttons = `<button class="btn-sm" onclick="togglePwRow(${realIdx})">${t('btn.changePw')}</button>`;
+    }
+
+    const tr = document.createElement('tr');
+    tr.className = 'u-row';
+    tr.innerHTML = `
+      <td><div class="u-info"><div class="ua">${initials}</div><span>${u.username}</span></div></td>
+      <td><span class="role-badge${isAdminRole?' admin':''}">${u.role}</span></td>
+      <td style="display:flex;gap:8px;flex-wrap:wrap">${buttons}</td>`;
+
+    const pwTr = document.createElement('tr');
+    pwTr.className = 'pw-row';
+    pwTr.id = `pw-row-${realIdx}`;
+    pwTr.innerHTML = `<td colspan="3"><div class="pw-inner">
+      <input type="password" id="pw-inp-${realIdx}" placeholder="${currentLang==='id'?'Password baru':'New password'}">
+      <button class="btn-sm blue" onclick="changePw(${realIdx})">${t('btn.save')}</button>
+      <button class="btn-sm" onclick="togglePwRow(${realIdx})">${t('btn.cancel')}</button>
+    </div></td>`;
+
+    tbody.appendChild(tr);
+    tbody.appendChild(pwTr);
+  });
+}
+
+function toggleAddForm(){
+  document.getElementById('add-user-form').classList.toggle('show');
+  document.getElementById('new-uname').value='';
+  document.getElementById('new-pass').value='';
+}
+
+function addUser(){
+  const uname = document.getElementById('new-uname').value.trim();
+  const pass  = document.getElementById('new-pass').value;
+  const role  = document.getElementById('new-role').value;
+  if(!uname||!pass){ showToast(t('err.fillAll')); return; }
+  if(users.find(u=>u.username===uname)){ showToast(t('err.unameTaken')); return; }
+  users.push({username:uname, password:pass, role});
+  saveUsers();
+  toggleAddForm();
+  renderUserTable();
+  showToast(t('toast.userAdded'));
+}
+
+function deleteUser(i){
+  if(loggedUser && users[i].username===loggedUser.username){ showToast(t('err.sameUser')); return; }
+  const admins = users.filter(u=>u.role==='Administrator');
+  if(users[i].role==='Administrator' && admins.length<=1){ showToast(t('err.lastAdmin')); return; }
+  users.splice(i,1);
+  saveUsers();
+  renderUserTable();
+  showToast(t('toast.userDeleted'));
+}
+
+function togglePwRow(i){
+  const row = document.getElementById(`pw-row-${i}`);
+  row.classList.toggle('show');
+}
+
+function changePw(i){
+  const newPw = document.getElementById(`pw-inp-${i}`).value;
+  if(!newPw){ showToast(t('err.fillAll')); return; }
+  users[i].password = newPw;
+  if(loggedUser && users[i].username===loggedUser.username) loggedUser.password=newPw;
+  saveUsers();
+  togglePwRow(i);
+  showToast(t('toast.pwChanged'));
+}
+
+/* ── DASHBOARD URLS ── */
+function saveDashUrls(){ localStorage.setItem('astra_urls', JSON.stringify(dashUrls)); }
+
+function loadDashUrlInputs(){
+  ['sto','print','mif'].forEach(key=>{
+    const inp = document.getElementById('url-'+key);
+    if(inp) inp.value = dashUrls[key] || '';
+    updateDashStatus(key);
+  });
+}
+
+function updateDashStatus(key){
+  const el = document.getElementById(key+'-status');
+  if(!el) return;
+  const hasUrl = !!dashUrls[key];
+  el.className = 'du-status '+(hasUrl?'ok':'empty');
+  el.textContent = hasUrl ? (currentLang==='id'?'● URL aktif':'● URL active') : (currentLang==='id'?'○ Belum dikonfigurasi':'○ Not configured');
+}
+
+function rebuildPanel(key){
+  const panel = document.getElementById('panel-'+key);
+  if(!panel) return;
+  const url = dashUrls[key];
+  if(url){
+    panel.innerHTML = `<iframe src="${url}" allowfullscreen title="Dashboard ${key}"></iframe>`;
+  } else {
+    const icons = {
+      print:`<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>`,
+      mif:`<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>`
+    };
+    const titleMap = {print:t('ph.print'), mif:t('ph.mif')};
+    panel.innerHTML = `<div class="placeholder-panel">
+      <div class="ph-icon"><svg viewBox="0 0 24 24" stroke-width="1.5">${icons[key]||''}</svg></div>
+      <div class="ph-title">${titleMap[key]||key}</div>
+      <div class="ph-sub">${t('ph.sub')}</div>
+      <span class="ph-badge">${t('ph.badge')}</span>
+      <span class="ph-link" onclick="goSettings()">${t('ph.goto')}</span>
+    </div>`;
+  }
+}
+
+function saveDashUrl(key){
+  const val = document.getElementById('url-'+key).value.trim();
+  if(!val){ showToast(t('err.fillAll')); return; }
+  dashUrls[key] = val;
+  saveDashUrls();
+  updateDashStatus(key);
+  if(key==='sto'){
+    const panel = document.getElementById('panel-sto');
+    const iframe = panel.querySelector('iframe');
+    if(iframe) iframe.src = val;
+    else panel.innerHTML = `<iframe src="${val}" allowfullscreen title="STO Monitoring"></iframe>`;
+  } else {
+    rebuildPanel(key);
+  }
+  if(key==='sto') dashMeta.sto.live = true;
+  showToast(t('toast.urlSaved'));
+}
+
+function clearDashUrl(key){
+  dashUrls[key] = '';
+  document.getElementById('url-'+key).value = '';
+  saveDashUrls();
+  updateDashStatus(key);
+  if(key!=='sto') rebuildPanel(key);
+  else {
+    const panel = document.getElementById('panel-sto');
+    panel.innerHTML = `<div class="placeholder-panel">
+      <div class="ph-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+      <div class="ph-title">STO Monitoring</div>
+      <div class="ph-sub">${t('ph.sub')}</div>
+      <span class="ph-badge">${t('ph.badge')}</span>
+      <span class="ph-link" onclick="goSettings()">${t('ph.goto')}</span>
+    </div>`;
+    dashMeta.sto.live = false;
+  }
+  showToast(t('toast.urlCleared'));
+}
+
+/* ── PICA TABLE ── */
+let picaData   = JSON.parse(localStorage.getItem('astra_pica') || '[]');
+let picaFilter = 'all';
+let picaNextId = picaData.length ? Math.max(...picaData.map(r=>r.id)) + 1 : 1;
+
+function savePica(){ localStorage.setItem('astra_pica', JSON.stringify(picaData)); }
+
+function stClass(status){ return status==='Open'?'st-open': status==='In Progress'?'st-progress':'st-closed'; }
+
+function renderPicaSummary(){
+  const open     = picaData.filter(r=>r.status==='Open').length;
+  const progress = picaData.filter(r=>r.status==='In Progress').length;
+  const closed   = picaData.filter(r=>r.status==='Closed').length;
+  const el = document.getElementById('pica-summary');
+  if(!el) return;
+  if(!picaData.length){ el.innerHTML=''; return; }
+  el.innerHTML = `
+    <span class="sum-item"><span class="sum-dot" style="background:#C62828"></span>${open} Open</span>
+    <span style="color:var(--border-lt)">·</span>
+    <span class="sum-item"><span class="sum-dot" style="background:#E65100"></span>${progress} In Progress</span>
+    <span style="color:var(--border-lt)">·</span>
+    <span class="sum-item"><span class="sum-dot" style="background:#2E7D32"></span>${closed} Closed</span>`;
+}
+
+function renderPica(){
+  const rows = picaFilter==='all' ? picaData
+    : picaData.filter(r=> picaFilter==='open' ? r.status==='Open'
+        : picaFilter==='progress' ? r.status==='In Progress'
+        : r.status==='Closed');
+
+  const tbody = document.getElementById('pica-tbody');
+  const countEl = document.getElementById('pica-count');
+  if(!tbody) return;
+
+  const totalLabel = currentLang==='id'
+    ? `${rows.length} dari ${picaData.length} item`
+    : `${rows.length} of ${picaData.length} items`;
+  if(countEl) countEl.textContent = totalLabel;
+  renderPicaSummary();
+
+  if(!rows.length){
+    const msg = picaData.length===0
+      ? (currentLang==='id'
+          ? 'Belum ada data. Klik "Tambah Baris" untuk memulai.'
+          : 'No data yet. Click "Add Row" to start.')
+      : (currentLang==='id' ? 'Tidak ada item untuk filter ini.' : 'No items match this filter.');
+    tbody.innerHTML = `<tr><td colspan="9" class="pica-empty">${msg}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = '';
+  rows.forEach((row, idx) => {
+    const sc  = stClass(row.status);
+    const tr  = document.createElement('tr');
+    tr.dataset.id = row.id;
+    tr.innerHTML = `
+      <td class="col-no">${idx+1}</td>
+      <td class="col-date"><span class="pica-cell date-cell" contenteditable="true" data-id="${row.id}" data-field="date" onblur="picaCellSave(this)">${esc(row.date)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-id="${row.id}" data-field="problem" onblur="picaCellSave(this)">${esc(row.problem)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-id="${row.id}" data-field="rootCause" onblur="picaCellSave(this)">${esc(row.rootCause)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-id="${row.id}" data-field="countermeasure" onblur="picaCellSave(this)">${esc(row.countermeasure)}</span></td>
+      <td class="col-pic"><span class="pica-cell" contenteditable="true" data-id="${row.id}" data-field="pic" onblur="picaCellSave(this)">${esc(row.pic)}</span></td>
+      <td class="col-target"><span class="pica-cell" contenteditable="true" data-id="${row.id}" data-field="target" onblur="picaCellSave(this)">${esc(row.target)}</span></td>
+      <td class="col-status">
+        <select class="status-sel ${sc}" data-id="${row.id}" onchange="picaStatusSave(this)">
+          <option value="Open"        ${row.status==='Open'?'selected':''}>🔴 Open</option>
+          <option value="In Progress" ${row.status==='In Progress'?'selected':''}>🟠 In Progress</option>
+          <option value="Closed"      ${row.status==='Closed'?'selected':''}>🟢 Closed</option>
+        </select>
+      </td>
+      <td class="col-action">
+        <button class="del-row-btn" onclick="delPicaRow(${row.id})" title="${currentLang==='id'?'Hapus baris':'Delete row'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function picaCellSave(el){
+  const id    = parseInt(el.dataset.id);
+  const field = el.dataset.field;
+  const row   = picaData.find(r=>r.id===id);
+  if(row){ row[field] = el.textContent.trim(); savePica(); }
+}
+
+function picaStatusSave(sel){
+  const id  = parseInt(sel.dataset.id);
+  const row = picaData.find(r=>r.id===id);
+  if(!row) return;
+  row.status    = sel.value;
+  sel.className = 'status-sel ' + stClass(sel.value);
+  savePica();
+  renderPicaSummary();
+  const countEl = document.getElementById('pica-count');
+  if(countEl && picaFilter!=='all'){
+    renderPica();
+  }
+}
+
+function addPicaRow(){
+  const today = new Date().toISOString().split('T')[0];
+  picaData.push({id:picaNextId++, date:today, problem:'', rootCause:'', countermeasure:'', pic:'', target:'', status:'Open'});
+  savePica();
+  picaFilter = 'all';
+  document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.pf-btn[data-filter="all"]').classList.add('active');
+  renderPica();
+  setTimeout(()=>{
+    const cells = document.querySelectorAll('[data-field="problem"]');
+    if(cells.length) cells[cells.length-1].focus();
+  }, 60);
+}
+
+function delPicaRow(id){
+  if(!confirm(currentLang==='id'?'Hapus baris ini?':'Delete this row?')) return;
+  picaData = picaData.filter(r=>r.id!==id);
+  savePica();
+  renderPica();
+  showToast(currentLang==='id'?'Baris dihapus':'Row deleted');
+}
+
+function setPicaFilter(filter, btn){
+  picaFilter = filter;
+  document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPica();
+}
+
+function exportPicaCSV(){
+  const hdrs = currentLang==='id'
+    ? ['No.','Tanggal','Masalah/Problem','Akar Masalah','Countermeasure','PIC','Target','Status']
+    : ['No.','Date','Problem','Root Cause','Countermeasure','PIC','Target','Status'];
+  const rows = picaData.map((r,i)=>[i+1, r.date, r.problem, r.rootCause, r.countermeasure, r.pic, r.target, r.status]);
+  const csv  = [hdrs,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`PICA_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  showToast(currentLang==='id'?'File CSV berhasil diunduh':'CSV exported successfully');
+}
+
+/* ── TEAM INFORMATION ── */
+let teamData   = JSON.parse(localStorage.getItem('astra_team') || '[]');
+let teamNextId = teamData.length ? Math.max(...teamData.map(r=>r.id)) + 1 : 1;
+
+function saveTeam(){ localStorage.setItem('astra_team', JSON.stringify(teamData)); }
+
+function renderTeam(){
+  const tbody   = document.getElementById('team-tbody');
+  const countEl = document.getElementById('team-count');
+  if(!tbody) return;
+  if(countEl) countEl.textContent = currentLang==='id'
+    ? `${teamData.length} anggota`
+    : `${teamData.length} member${teamData.length!==1?'s':''}`;
+
+  if(!teamData.length){
+    tbody.innerHTML = `<tr><td colspan="6" class="pica-empty">${
+      currentLang==='id'
+        ? 'Belum ada data tim. Klik "Tambah Anggota" untuk memulai.'
+        : 'No team data yet. Click "Add Member" to start.'
+    }</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = '';
+  teamData.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = row.id;
+    tr.innerHTML = `
+      <td class="col-no">${idx+1}</td>
+      <td><span class="pica-cell" contenteditable="true" data-tid="${row.id}" data-tfield="role"  onblur="teamCellSave(this)">${esc(row.role)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-tid="${row.id}" data-tfield="desc"  onblur="teamCellSave(this)">${esc(row.desc)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-tid="${row.id}" data-tfield="name"  onblur="teamCellSave(this)">${esc(row.name)}</span></td>
+      <td><span class="pica-cell" contenteditable="true" data-tid="${row.id}" data-tfield="email" onblur="teamCellSave(this)" style="color:var(--blue-acc)">${esc(row.email)}</span></td>
+      <td class="col-action">
+        <button class="del-row-btn" onclick="delTeamRow(${row.id})" title="${currentLang==='id'?'Hapus':'Delete'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function teamCellSave(el){
+  const id    = parseInt(el.dataset.tid);
+  const field = el.dataset.tfield;
+  const row   = teamData.find(r=>r.id===id);
+  if(row){ row[field] = el.textContent.trim(); saveTeam(); }
+}
+
+function addTeamRow(){
+  teamData.push({id:teamNextId++, role:'', desc:'', name:'', email:''});
+  saveTeam();
+  renderTeam();
+  setTimeout(()=>{
+    const cells = document.querySelectorAll('[data-tfield="role"]');
+    if(cells.length) cells[cells.length-1].focus();
+  }, 60);
+}
+
+function delTeamRow(id){
+  if(!confirm(currentLang==='id'?'Hapus anggota ini?':'Delete this member?')) return;
+  teamData = teamData.filter(r=>r.id!==id);
+  saveTeam();
+  renderTeam();
+  showToast(currentLang==='id'?'Anggota dihapus':'Member deleted');
+}
+
+function exportTeamCSV(){
+  const hdrs = currentLang==='id'
+    ? ['No.','Role','Description','Name','Email']
+    : ['No.','Role','Description','Name','Email'];
+  const rows = teamData.map((r,i)=>[i+1, r.role, r.desc, r.name, r.email]);
+  const csv  = [hdrs,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`Team_Information_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  showToast(currentLang==='id'?'File CSV berhasil diunduh':'CSV exported successfully');
+}
+
+/* ── INIT ── */
+(function init(){
+  const theme = localStorage.getItem('astra_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('dark-toggle').checked = theme==='dark';
+  loadDashUrlInputs();
+  applyLang();
+  updateDate();
+  setInterval(updateDate, 60000);
+})();
+</script>
+</body>
+</html>
